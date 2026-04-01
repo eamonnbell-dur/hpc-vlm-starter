@@ -28,6 +28,8 @@ You write the prompt. The pipeline handles everything else.
 - Python 3.9+ on the cluster (usually available via `module load`)
 - Your scanned images in JPEG, PNG, or TIFF format
 
+> **Not sure if your cluster is compatible?** See [COMPATIBILITY.md](COMPATIBILITY.md) for a checklist covering GPU architecture requirements, VRAM thresholds, quantization options for smaller clusters, and scheduler compatibility. Older or departmental clusters may need investigation before you begin.
+
 ### Getting HPC Access
 
 If you do not already have an HPC allocation, expect some administrative lead time before you can run jobs. The process typically involves: creating an account with your institution's research computing group, requesting a compute allocation (usually requiring a brief research summary and computational justification), and setting up a project group if collaborators need access.
