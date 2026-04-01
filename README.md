@@ -230,6 +230,26 @@ Every image produces a `<filename>.json` output file. Before processing, `batch_
 
 Each failed image is retried 3 times with exponential backoff (1s, 1.5s, 2.25s). If all retries fail, the image path and error message are logged to `failed_cards_<model>.txt`. The retry sweep aggregates all failure logs and reprocesses them in a single pass.
 
+### Inference Settings
+
+The two settings you are most likely to need to adjust are `TEMPERATURE` and `MAX_TOKENS` in `config.sh`.
+
+**Temperature** controls how deterministic the model's output is. The default is `0.0`, which means the model always picks the most probable next token — maximum consistency and repeatability. This is almost always what you want for structured extraction: you are asking the model to read and transcribe, not to be creative.
+
+The one case to raise temperature slightly is when a card or document is so ambiguous or damaged that the model at `0.0` locks into a wrong interpretation and fails every retry. Setting temperature to `0.1` or `0.2` on a retry pass introduces just enough variability to break the cycle. If you find that a significant fraction of your retry failures are the same images failing the same way, a small temperature increase is worth trying.
+
+Avoid temperatures above `0.3` for extraction tasks — higher values introduce hallucination risk, where the model begins plausibly inventing content that is not on the page.
+
+**`MAX_TOKENS`** caps the length of the model's response. The default of `1024` is sufficient for most index cards and short document entries. If your documents are dense — long summaries, multi-entry pages, verbose text blocks — you may need to increase this to `2048` or `4096`. Signs that `MAX_TOKENS` is too low: truncated JSON output, missing closing braces, or fields that are cut off mid-value. These show up as malformed JSON parse errors in the failure log.
+
+**Other settings** (you will likely not need to change these):
+
+| Setting | Default | Notes |
+|---------|---------|-------|
+| `top_p` | `1.0` | Nucleus sampling threshold. Leave at 1.0 when temperature is 0.0. |
+| `--timeout` | `120s` | Per-request timeout. Increase for very large images or slow GPU nodes. |
+| `--workers` | `32` | Concurrent requests. Reduce if you see frequent server OOM errors. |
+
 ---
 
 ## Adapting for Your Collection
