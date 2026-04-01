@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Archival Card Extraction",
+  "description": "Structured output from VLM extraction of a historical government records CCF index card.",
+  "type": "object",
+  "properties": {
+    "card_id":                  { "type": ["string", "null"] },
+    "letter_number":            { "type": ["string", "null"] },
+    "year":                     { "type": ["string", "null"] },
+    "card_type":                { "type": "string", "enum": ["standard", "general_services", "filed_with", "exception"] },
+    "correspondent":            { "type": ["string", "null"] },
+    "date_correspondence_raw":  { "type": ["string", "null"] },
+    "date_received_raw":        { "type": ["string", "null"] },
+    "summary":                  { "type": ["string", "null"] },
+    "agency_jurisdiction":      { "type": ["string", "null"] },
+    "decimal_classification":   { "type": ["string", "null"] },
+    "filed_with":               { "type": ["string", "null"] },
+    "year_stamp":               { "type": ["string", "null"] },
+    "raw_text":                 { "type": ["string", "null"] },
+    "extraction_confidence":    { "type": "string", "enum": ["high", "medium", "low"] },
+    "extraction_notes":         { "type": ["string", "null"] }
+  },
+  "required": ["card_type", "extraction_confidence"]
+}

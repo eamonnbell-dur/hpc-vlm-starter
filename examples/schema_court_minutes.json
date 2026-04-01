@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Court of Session Minute Book Extraction",
+  "description": "Structured output from VLM extraction of a historical court records minute book page.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "sitting_date":           { "type": ["string", "null"] },
+      "pursuer":                { "type": ["string", "null"] },
+      "pursuer_designation":    { "type": ["string", "null"] },
+      "defender":               { "type": ["string", "null"] },
+      "defender_designation":   { "type": ["string", "null"] },
+      "legal_action":           { "type": ["string", "null"] },
+      "judge":                  { "type": ["string", "null"] },
+      "clerk":                  { "type": ["string", "null"] },
+      "raw_text":               { "type": ["string", "null"] },
+      "extraction_confidence":  { "type": "string", "enum": ["high", "medium", "low"] },
+      "extraction_notes":       { "type": ["string", "null"] }
+    },
+    "required": ["extraction_confidence"]
+  }
+}
