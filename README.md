@@ -28,6 +28,14 @@ You write the prompt. The pipeline handles everything else.
 - Python 3.9+ on the cluster (usually available via `module load`)
 - Your scanned images in JPEG, PNG, or TIFF format
 
+### Getting HPC Access
+
+If you do not already have an HPC allocation, expect some administrative lead time before you can run jobs. The process typically involves: creating an account with your institution's research computing group, requesting a compute allocation (usually requiring a brief research summary and computational justification), and setting up a project group if collaborators need access.
+
+At UVA, for example, this involves [applying for an allocation](https://www.rc.virginia.edu/userinfo/hpc/access/) through the Research Computing office, establishing a Grouper group through ITS, and writing a short description of your research and computational needs. Standard allocations at UVA are free for faculty-led research projects.
+
+Your institution's process will differ — contact your research computing office early. Most are genuinely supportive of humanities and library projects and can help you scope your resource request appropriately.
+
 ## Directory Structure
 
 ```
@@ -293,16 +301,20 @@ Once your prompt works, chunk your dataset and submit the pipeline. Start with a
 
 ## Cost and Resource Estimates
 
-| Collection Size | GPU Config | Approximate Time | HPC Cost |
-|----------------|-----------|-------------------|----------|
+The figures below are approximate estimates based on our production pipelines. Your actual consumption will depend on your cluster's GPU hardware, the model you run, and your document complexity.
+
+| Collection Size | GPU Config | Approximate Time | Approx. SUs |
+|----------------|-----------|-------------------|-------------|
 | 500 images | 1x A100 (7B model) | ~1 hour | ~40 SUs |
 | 10,000 images | 1x A100 (27B model) | ~6 hours | ~240 SUs |
 | 100,000 images | 2x A100 (72B model) | ~25 hours | ~2,000 SUs |
 | 1,000,000 images | 4x A100 (72B model) | ~10 days | ~19,000 SUs |
 
-At most universities, standard HPC allocations provide 50,000-200,000 SUs per year. A 10,000-image collection on a 27B model consumes roughly 0.5% of a typical annual allocation.
+**A note on SUs:** One SU (Service Unit) typically equals one core-hour, but the definition and pricing varies by institution. At UVA, standard research allocations are free for faculty-led projects and purchased SUs cost $0.01/SU. Your institution may define SUs differently, charge differently, or use different terminology entirely (e.g. "credits", "compute hours", "node-hours"). Check with your research computing office before estimating costs.
 
-Compare to commercial API pricing: 100,000 images through a cloud VLM API would cost $5,000-$15,000 at current rates. On your university cluster, it costs allocated compute time — which is often effectively free.
+A 10,000-image collection on a 27B model consumes a modest fraction of a typical annual allocation at most research universities — well within what a standard free allocation can support.
+
+Compare to commercial API pricing: 100,000 images through a cloud VLM API would cost $5,000–$15,000 at current rates. On your university cluster, the same work costs allocated compute time — which is often effectively free, and keeps your data on institutional infrastructure.
 
 ---
 
