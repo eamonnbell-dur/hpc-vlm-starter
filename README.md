@@ -18,6 +18,8 @@ The pipeline is designed to be adapted by historians, archivists, and digital hu
 
 You write the prompt. The pipeline handles everything else.
 
+> **Using Claude Code?** This repository includes a `CLAUDE.md` file that instructs Claude Code to act as a setup guide for your specific project and infrastructure. Open the repo in [Claude Code](https://claude.ai/code), and it will ask about your collection, assess your cluster, walk you through `config.sh`, and help you write your extraction prompt.
+
 ---
 
 ## Prerequisites
