@@ -6,6 +6,21 @@ If you are unsure about any of these, your research computing help desk can conf
 
 ---
 
+## A Note on the Hardware Moment We're In
+
+If your institution's current GPU cluster feels underpowered for this kind of work, it may not be for long. Research computing infrastructure at major universities is in active transition to NVIDIA's Blackwell generation — and the implications for historians and archivists running VLM pipelines are significant.
+
+The A100 (80 GB), which powers our production pipeline, has been the workhorse of academic AI research for the past four years. Running a 72B model on A100s requires 4 cards and careful parallelism configuration — tensor-parallel and pipeline-parallel settings that introduce real complexity. The Blackwell generation changes that calculus substantially:
+
+- **NVIDIA B200** (192 GB HBM3e, ~4.5 petaFLOPS FP8): A single card fits a 72B model with room to spare. No parallelism required. Several major research universities — including UVA — are bringing B200 clusters online in 2026.
+- **NVIDIA RTX Pro 6000 Blackwell** (96 GB GDDR7): A workstation-class Blackwell card already available at institutions including UNC and UMich. A 72B model fits across two cards; a 27B model fits on one.
+
+The practical upshot: a pipeline that currently requires a 4-GPU A100 node running for 10 days to process 1.4 million documents will likely run on a single B200 node in roughly the same time, with simpler configuration. For collections in the tens of thousands, a single Blackwell-generation GPU could finish the job in hours.
+
+If your cluster feels like it's at the edge of what's possible for this work right now, check with your research computing office about their hardware roadmap. The window between "this seems out of reach" and "this runs on a single node" is closing quickly.
+
+---
+
 ## GPU Architecture and VRAM
 
 vLLM requires NVIDIA GPUs with CUDA compute capability **sm_70 or higher** (Volta architecture, 2017 or newer). Older GPUs — including Kepler (K20, K80), Maxwell, and Pascal-generation cards — will not run vLLM regardless of VRAM.
