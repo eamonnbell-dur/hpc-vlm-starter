@@ -2,7 +2,7 @@
 
 **Extract structured data from historical document images using open-source vision-language models on your university's research computing cluster.**
 
-This starter kit provides a complete, reusable pipeline for processing scanned archival documents — index cards, court records, correspondence, registers, ledgers — through a large vision-language model (VLM) running on institutional GPU infrastructure. It was developed from production pipelines processing millions of historical documents and historical court records.
+This starter kit provides a complete, reusable pipeline for processing scanned archival documents — index cards, court records, correspondence, registers, ledgers — through a large vision-language model (VLM) running on institutional GPU infrastructure. Developed by Loren S. Moulds and Angela Boakye Danquah, it was built from production pipelines processing millions of historical documents and historical court records.
 
 The pipeline is designed to be adapted by historians, archivists, and digital humanists who have access to a university HPC cluster but may not have built one of these systems before.
 
@@ -294,7 +294,7 @@ Compare to commercial API pricing: 100,000 images through a cloud VLM API would 
 
 ## Acknowledgments
 
-Developed from production pipelines at the University of Virginia for the a large-scale archival digitization project and the a court records digitization project. Originally published alongside the [Computational History](https://computationalhistory.substack.com) Substack.
+Developed by Loren S. Moulds (University of Virginia Law Library) and Angela Boakye Danquah (Data Analytics Center, UVA), from production pipelines for the a large-scale archival digitization project and the a court records digitization project. Originally published alongside the [Computational History](https://computationalhistory.substack.com) Substack.
 
 ## License
 
