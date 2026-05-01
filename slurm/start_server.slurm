@@ -22,21 +22,26 @@ module purge
 module load apptainer
 
 mkdir -p "${LOG_DIR}"
-mkdir -p "/scratch/$USER/fakehome/.cache/{huggingface,vllm}"
+mkdir -p "${FAKEHOME_DIR}/.cache/huggingface"
+mkdir -p "${FAKEHOME_DIR}/.cache/vllm"
 
 # Write node address so worker scripts can find the server
 echo "${SLURMD_NODENAME}:${SERVER_PORT}" > "${LOG_DIR}/vllm_server_address.txt"
 echo "Server starting on ${SLURMD_NODENAME}:${SERVER_PORT}"
 
+# Optional: reduce context window to lower KV-cache VRAM usage
+VLLM_EXTRA_ARGS=()
+[ -n "${MAX_MODEL_LEN}" ] && VLLM_EXTRA_ARGS+=(--max-model-len "${MAX_MODEL_LEN}")
+
 apptainer exec --nv \
-    --no-home \
+    --home "${FAKEHOME_DIR}" \
     --bind "${PROJECT_DIR}:${PROJECT_DIR}" \
-    --bind "/scratch/$USER:/scratch/$USER" \
-    --bind "/scratch/$USER/fakehome:/home/$USER" \
-    --env HOME="/home/$USER" \
-    --env XDG_CACHE_HOME="/home/$USER/.cache" \
-    --env HF_HOME="/home/$USER/.cache/huggingface" \
+    --env XDG_CACHE_HOME="${FAKEHOME_DIR}/.cache" \
+    --env HF_HOME="${FAKEHOME_DIR}/.cache/huggingface" \
+    --env PYTHONNOUSERSITE=1 \
     --env VLLM_DO_NOT_TRACK=1 \
+    --env TRANSFORMERS_OFFLINE="${HF_OFFLINE}" \
+    --env HF_HUB_OFFLINE="${HF_OFFLINE}" \
     "${CONTAINER_PATH}" \
     vllm serve "${MODEL_PATH}" \
         --served-model-name "${MODEL_NAME}" \
@@ -44,4 +49,5 @@ apptainer exec --nv \
         --pipeline-parallel-size "${PIPELINE_PARALLEL}" \
         --dtype auto \
         --host 0.0.0.0 \
-        --port "${SERVER_PORT}"
+        --port "${SERVER_PORT}" \
+        "${VLLM_EXTRA_ARGS[@]}"

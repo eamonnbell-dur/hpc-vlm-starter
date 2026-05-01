@@ -328,6 +328,16 @@ Compare to commercial API pricing: 100,000 images through a cloud VLM API would 
 
 **Server won't start**: Check GPU availability with `squeue` and `sinfo -p gpu`. You may need to wait for GPU nodes to free up, or reduce `GPU_COUNT`.
 
+**Apptainer fails at container startup**: If you see errors related to home directory binding, check that `FAKEHOME_DIR` in `config.sh` is writable. The default points to `/scratch/${USER}/fakehome`; if your cluster does not have `/scratch`, change it to `${PROJECT_DIR}/fakehome`. See [COMPATIBILITY.md](COMPATIBILITY.md) for details.
+
+**vLLM tries to contact HuggingFace at startup**: Set `HF_OFFLINE=1` in `config.sh` (the default). This prevents vLLM from checking for updates when the model is already downloaded. On clusters with restricted outbound network access, leaving this unset can cause the server to hang or fail at startup.
+
+**OOM error when loading the model**: The model's default context window may be too large for your GPU configuration. Set `MAX_MODEL_LEN` in `config.sh` to a smaller value (e.g., `82224`) to reduce KV cache memory usage. Reduce until the model loads, at the cost of shorter maximum input length.
+
+**`sbatch` returns a permissions error**: Remove the `#SBATCH -A ${SLURM_ACCOUNT}` line from the failing script. Some clusters do not use account-based billing and reject this directive. See [COMPATIBILITY.md](COMPATIBILITY.md).
+
+**Partition errors on CPU-only jobs**: Remove `#SBATCH --partition=standard` from `run_batch.slurm` and `retry_failed.slurm`. Many schedulers assign a default partition automatically for non-GPU jobs.
+
 **Extractions are slow**: Increase `WORKERS` in `config.sh`. The sweet spot is usually 16-32 concurrent requests for a 72B model on 4 GPUs.
 
 **High failure rate**: Check `failed_cards_*.txt` for error patterns. Common causes:

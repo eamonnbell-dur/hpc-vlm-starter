@@ -40,6 +40,11 @@ IMAGE_PATTERN="*.jpg"         # Glob pattern for your image files
 MAX_TOKENS=1024
 TEMPERATURE=0.0
 
+# ── Container / Apptainer ──
+FAKEHOME_DIR="/scratch/${USER}/fakehome"  # Redirect container home away from real $HOME; change to ${PROJECT_DIR}/fakehome if /scratch is unavailable
+HF_OFFLINE=1                              # 1 = use locally downloaded model only (prevents HuggingFace Hub network calls); 0 = allow hub access
+MAX_MODEL_LEN=""                          # Override vLLM context window (e.g. 82224 to reduce KV cache VRAM usage); leave empty for model default
+
 # ── Batch Worker Resources ──
 BATCH_MEM="32G"
 BATCH_CPUS=8

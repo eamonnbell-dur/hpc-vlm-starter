@@ -5,12 +5,12 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "${SCRIPT_DIR}/../config.sh"
 
-#SBATCH -A ${SLURM_ACCOUNT}
+#SBATCH -A ${SLURM_ACCOUNT}        # Remove this line if your cluster does not use account-based billing
 #SBATCH --time=${BATCH_TIME}
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=${BATCH_CPUS}
-#SBATCH --partition=standard
+#SBATCH --partition=standard       # Remove this line if your scheduler assigns a default partition for CPU jobs
 #SBATCH --mem=${BATCH_MEM}
 #SBATCH -J "vlm-extract"
 #SBATCH -o ${LOG_DIR}/batch_extract_%j.out

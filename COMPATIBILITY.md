@@ -75,6 +75,51 @@ The Python extraction scripts — `scripts/extract_one.py` and `scripts/batch_ex
 
 ---
 
+## Adapting the Scripts for Your Cluster
+
+Even when your cluster meets the hardware requirements, the default scripts may need small adjustments to fit your site's policies. These are the most common issues encountered when deploying on clusters other than UVA Rivanna.
+
+### Home directory and scratch space
+
+`slurm/start_server.slurm` uses `--home "${FAKEHOME_DIR}"` to redirect Apptainer's home directory away from your real `$HOME` (which is often quota-constrained on HPC clusters). By default, `FAKEHOME_DIR` in `config.sh` points to `/scratch/${USER}/fakehome`.
+
+If your cluster does not have a `/scratch` filesystem or you do not have write access there, change `FAKEHOME_DIR` to a directory within your project allocation:
+
+```bash
+# in config.sh
+FAKEHOME_DIR="${PROJECT_DIR}/fakehome"
+```
+
+Create the directory before submitting your first job:
+
+```bash
+mkdir -p "${PROJECT_DIR}/fakehome/.cache/huggingface"
+```
+
+### Account (`-A`) and partition flags
+
+The SLURM scripts include `#SBATCH -A ${SLURM_ACCOUNT}` and partition directives (`--partition=gpu`, `--partition=standard`). These work on clusters that use account-based billing and named partitions — but some institutions do not require or allow them.
+
+If you receive a permissions error when submitting, try removing the `#SBATCH -A` line from the relevant script. If partition errors occur for CPU-only jobs (`run_batch.slurm`, `retry_failed.slurm`), try removing `--partition=standard` — many schedulers assign a default partition automatically for non-GPU jobs.
+
+### HuggingFace offline mode
+
+`HF_OFFLINE=1` in `config.sh` (the default) sets `TRANSFORMERS_OFFLINE=1` and `HF_HUB_OFFLINE=1` inside the container, preventing vLLM from attempting to contact HuggingFace Hub at startup. This is almost always correct when the model is already downloaded to your cluster — and on clusters with restricted outbound network access, it prevents startup failures where vLLM times out trying to fetch model metadata.
+
+If you intentionally want to allow network access (e.g., to pull a model update), set `HF_OFFLINE=0` in `config.sh`.
+
+### Context window override (`--max-model-len`)
+
+Some large models cannot be loaded at their full default context window on smaller GPU configurations — the KV cache alone can exhaust available VRAM. If vLLM reports an OOM error at startup, set `MAX_MODEL_LEN` in `config.sh`:
+
+```bash
+MAX_MODEL_LEN=82224   # reduce until model loads; trade-off is shorter max input length
+```
+
+Leave `MAX_MODEL_LEN` empty (the default) to use the model's built-in context window.
+
+---
+
 ## Examples: Smaller Institutional Clusters
 
 Not all university clusters are large research computing facilities. Departmental and teaching clusters at smaller institutions may have significant constraints:
